@@ -1,0 +1,817 @@
+﻿                      CAT-02
+1. Partition List:
+
+import java.util.Scanner;
+
+class ListNode {
+    int val;
+    ListNode next;
+    ListNode(int val) {
+        this.val = val;
+        this.next = null;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Input number of nodes
+        int n = sc.nextInt();
+
+        // Build linked list
+        ListNode head = null, tail = null;
+        for (int i = 0; i < n; i++) {
+            int val = sc.nextInt();
+            ListNode newNode = new ListNode(val);
+            if (head == null) {
+                head = newNode;
+                tail = head;
+            } else {
+                tail.next = newNode;
+                tail = tail.next;
+            }
+        }
+
+        // Partition value
+        int x = sc.nextInt();
+
+        // Partition list
+        head = partition(head, x);
+
+        // Print output
+        System.out.print("[");
+        ListNode curr = head;
+        while (curr != null) {
+            System.out.print(curr.val);
+            if (curr.next != null) System.out.print("  ");
+            curr = curr.next;
+        }
+        System.out.println("]");
+        sc.close();
+    }
+
+    public static ListNode partition(ListNode head, int x) {
+        ListNode beforeHead = new ListNode(0); // dummy head for < x
+        ListNode afterHead = new ListNode(0);  // dummy head for >= x
+        ListNode before = beforeHead, after = afterHead;
+
+        while (head != null) {
+            if (head.val < x) {
+                before.next = head;
+                before = before.next;
+            } else {
+                after.next = head;
+                after = after.next;
+            }
+            head = head.next;
+        }
+
+        after.next = null;            // terminate list
+        before.next = afterHead.next; // connect lists
+
+        return beforeHead.next;
+    }
+}
+
+2.Add Two Numbers
+
+import java.util.Scanner;
+
+class ListNode {
+    int val;
+    ListNode next;
+    ListNode(int val) {
+        this.val = val;
+        this.next = null;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Read first list
+        int n = sc.nextInt();
+        ListNode l1 = null, tail1 = null;
+        for (int i = 0; i < n; i++) {
+            int val = sc.nextInt();
+            ListNode newNode = new ListNode(val);
+            if (l1 == null) {
+                l1 = newNode;
+                tail1 = newNode;
+            } else {
+                tail1.next = newNode;
+                tail1 = newNode;
+            }
+        }
+
+        // Read second list
+        int m = sc.nextInt();
+        ListNode l2 = null, tail2 = null;
+        for (int i = 0; i < m; i++) {
+            int val = sc.nextInt();
+            ListNode newNode = new ListNode(val);
+            if (l2 == null) {
+                l2 = newNode;
+                tail2 = newNode;
+            } else {
+                tail2.next = newNode;
+                tail2 = newNode;
+            }
+        }
+
+        // Add two numbers
+        ListNode result = addTwoNumbers(l1, l2);
+
+        // Print result
+        System.out.print("[");
+        while (result != null) {
+            System.out.print(result.val);
+            if (result.next != null) System.out.print("  ");
+            result = result.next;
+        }
+        System.out.println("]");
+
+        sc.close();
+    }
+
+    public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(0);
+        ListNode curr = dummy;
+        int carry = 0;
+
+        while (l1 != null || l2 != null || carry > 0) {
+            int sum = carry;
+            if (l1 != null) {
+                sum += l1.val;
+                l1 = l1.next;
+            }
+            if (l2 != null) {
+                sum += l2.val;
+                l2 = l2.next;
+            }
+            carry = sum / 10;
+            curr.next = new ListNode(sum % 10);
+            curr = curr.next;
+        }
+        return dummy.next;
+    }
+}
+                                                                                                                                                                                       3. Min Stack
+import java.util.Stack;
+import java.util.Scanner;
+
+
+class MinStack {
+    private Stack<Integer> stack;
+    private Stack<Integer> minStack;
+
+
+    public MinStack() {
+        stack = new Stack<>();
+        minStack = new Stack<>();
+    }
+
+
+    // Push value onto the stack
+    public void push(int val) {
+        stack.push(val);
+        // Push to minStack only if it's empty or the value is smaller or equal to the current minimum
+        if (minStack.isEmpty() || val <= minStack.peek()) {
+            minStack.push(val);
+        }
+    }
+
+
+    // Pop value from the stack
+    public void pop() {
+        if (!stack.isEmpty()) {
+            int removed = stack.pop();
+            if (removed == minStack.peek()) {
+                minStack.pop();
+            }
+        } else {
+            System.out.println("Stack is empty");
+        }
+    }
+
+
+    // Get the top value of the stack
+    public void top() {
+        if (!stack.isEmpty()) {
+            System.out.println(stack.peek());
+        } else {
+            System.out.println("Stack is empty");
+        }
+    }
+
+
+    // Get the minimum value of the stack
+    public void getMin() {
+        if (!minStack.isEmpty()) {
+            System.out.println(minStack.peek());
+        } else {
+            System.out.println("Stack is empty");
+        }
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        MinStack minStack = new MinStack();
+
+
+        // Read the number of operations
+        int q = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline
+
+
+        for (int i = 0; i < q; i++) {
+            String operation = scanner.nextLine();
+
+
+            // Parse the operation
+            if (operation.startsWith("push")) {
+                // Push operation: push x
+                String[] parts = operation.split(" ");
+                int value = Integer.parseInt(parts[1]);
+                minStack.push(value);
+            } else if (operation.equals("pop")) {
+                // Pop operation: pop
+                minStack.pop();
+            } else if (operation.equals("top")) {
+                // Top operation: top
+                minStack.top();
+            } else if (operation.equals("getMin")) {
+                // GetMin operation: getMin
+                minStack.getMin();
+            }
+        }
+
+
+        scanner.close();
+    }
+}
+
+
+	
+
+4.Valid Parentheses
+
+
+import java.util.Scanner;
+import java.util.Stack;
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        
+        // Validate and print result
+        System.out.println(isValid(s));
+        
+        sc.close();
+    }
+
+
+    public static boolean isValid(String s) {
+        // Edge case: empty string is valid
+        if (s.isEmpty()) {
+            return true;
+        }
+        
+        // Odd length cannot be valid
+        if (s.length() % 2 != 0) {
+            return false;
+        }
+        
+        Stack<Character> stack = new Stack<>();
+        
+        for (char ch : s.toCharArray()) {
+            // Push opening brackets
+            if (ch == '(' || ch == '{' || ch == '[') {
+                stack.push(ch);
+            } 
+            // Check closing brackets
+            else {
+                if (stack.isEmpty()) {
+                    return false; // no matching opening
+                }
+                char top = stack.pop();
+                if ((ch == ')' && top != '(') ||
+                    (ch == '}' && top != '{') ||
+                    (ch == ']' && top != '[')) {
+                    return false;
+                }
+            }
+        }
+        
+        // Valid only if stack is empty
+        return stack.isEmpty();
+    }
+}
+
+
+	
+
+
+
+5.Evaluate Reverse Polish Notation
+
+
+import java.util.*;
+
+
+public class Main{
+
+
+    public static int evalRPN(String[] tokens) {
+        Stack<Integer> stack = new Stack<>();
+
+
+        for (String token : tokens) {
+            // If token is an operator, pop two operands
+            if (token.equals("+") || token.equals("-") || token.equals("*") || token.equals("/")) {
+                int b = stack.pop(); // second operand
+                int a = stack.pop(); // first operand
+                int result = 0;
+
+
+                switch (token) {
+                    case "+":
+                        result = a + b;
+                        break;
+                    case "-":
+                        result = a - b;
+                        break;
+                    case "*":
+                        result = a * b;
+                        break;
+                    case "/":
+                        result = a / b; // truncates toward zero (Java behavior)
+                        break;
+                }
+
+
+                stack.push(result); // push result back
+            } else {
+                // Operand: convert string to integer
+                stack.push(Integer.parseInt(token));
+            }
+        }
+
+
+        return stack.pop(); // final result
+    }
+
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+
+        int n = sc.nextInt(); // number of tokens
+        String[] tokens = new String[n];
+        for (int i = 0; i < n; i++) {
+            tokens[i] = sc.next();
+        }
+
+
+        int result = evalRPN(tokens);
+        System.out.println(result);
+
+
+        sc.close();
+    }
+}
+
+
+
+
+	
+
+
+
+6.Valid Parenthesis String
+
+
+import java.util.Scanner;
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+
+        // Input
+        System.out.print("Enter the string: ");
+        String s = sc.nextLine();
+
+
+        // Output
+        System.out.println(checkValidString(s));
+
+
+        sc.close();
+    }
+
+
+    public static boolean checkValidString(String s) {
+        int minOpen = 0; // minimum possible open brackets
+        int maxOpen = 0; // maximum possible open brackets
+
+
+        for (char ch : s.toCharArray()) {
+            if (ch == '(') {
+                minOpen++;
+                maxOpen++;
+            } else if (ch == ')') {
+                if (minOpen > 0) minOpen--; 
+                maxOpen--;
+            } else if (ch == '*') {
+                if (minOpen > 0) minOpen--; // treat '*' as ')'
+                maxOpen++; // treat '*' as '('
+            }
+
+
+            // If maxOpen < 0, too many closing brackets
+            if (maxOpen < 0) {
+                return false;
+            }
+        }
+
+
+        // String is valid if minOpen == 0
+        return minOpen == 0;
+    }
+}
+
+7. Minimum Remove to Make Valid Parentheses
+
+import java.util.*;
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        // Input string
+        String s = sc.nextLine();
+        // Process and print result
+        System.out.println(minRemoveToMakeValid(s));
+        sc.close();
+    }
+    public static String minRemoveToMakeValid(String s) {
+        Stack<Integer> stack = new Stack<>();
+        Set<Integer> indexesToRemove = new HashSet<>();
+
+        // First pass: find unmatched parentheses
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (ch == '(') {
+                stack.push(i);
+            } else if (ch == ')') {
+                if (!stack.isEmpty()) {
+                    stack.pop(); // matched
+                } else {
+                    indexesToRemove.add(i); // unmatched ')'
+                }
+            }
+        }
+
+        // Add unmatched '(' from stack
+        while (!stack.isEmpty()) {
+            indexesToRemove.add(stack.pop());
+        }
+
+        // Build result
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            if (!indexesToRemove.contains(i)) {
+                sb.append(s.charAt(i));
+            }
+        }
+
+        return sb.toString();
+    }
+}
+
+8. Longest Valid Parentheses
+
+import java.util.Scanner;
+import java.util.Stack;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        // Input string
+        String s = sc.nextLine();
+        // Output result
+        System.out.println(longestValidParentheses(s));
+        sc.close();
+    }
+
+
+    public static int longestValidParentheses(String s) {
+        Stack<Integer> stack = new Stack<>();
+        stack.push(-1);  // Base index
+        int maxLen = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+
+            if (ch == '(') {
+                stack.push(i); // push index of '('
+            } else {
+                stack.pop(); // match with '('
+                if (stack.isEmpty()) {
+                    stack.push(i); // reset base
+                } else {
+                    maxLen = Math.max(maxLen, i - stack.peek());
+                }
+            }
+        }
+        return maxLen;
+    }
+}
+
+
+9.Basic Calculator
+
+
+import java.util.Scanner;
+import java.util.Stack;
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+
+        // Input expression
+        String s = sc.nextLine();
+
+
+        // Evaluate and print result
+        System.out.println(calculate(s));
+
+
+        sc.close();
+    }
+
+
+    public static int calculate(String s) {
+        int result = 0;
+        int number = 0;
+        int sign = 1; // current sign
+        Stack<Integer> stack = new Stack<>(); // store previous result and sign
+
+
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (Character.isDigit(ch)) {
+                number = number * 10 + (ch - '0');
+            } else if (ch == '+') {
+                result += sign * number;
+                number = 0;
+                sign = 1;
+            } else if (ch == '-') {
+                result += sign * number;
+                number = 0;
+                sign = -1;
+            } else if (ch == '(') {
+                // Push current result and sign
+                stack.push(result);
+                stack.push(sign);
+                result = 0;
+                sign = 1;
+            } else if (ch == ')') {
+                result += sign * number;
+                number = 0;
+                result *= stack.pop(); // multiply with sign before '('
+                result += stack.pop(); // add previous result
+            } 
+            // Ignore spaces
+        }
+
+
+        result += sign * number; // add last number
+        return result;
+    }
+}
+
+10. Validate Stack Sequences
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        // Read size of arrays
+        int n = sc.nextInt();
+        // Read pushed array
+        int[] pushed = new int[n];
+        for (int i = 0; i < n; i++) {
+            pushed[i] = sc.nextInt();
+        }
+        // Read popped array
+        int[] popped = new int[n];
+        for (int i = 0; i < n; i++) {
+            popped[i] = sc.nextInt();
+        }
+        // Validate and print result
+        System.out.println(validateStackSequences(pushed, popped));
+        sc.close();
+    }
+
+    public static boolean validateStackSequences(int[] pushed, int[] popped) {
+        Stack<Integer> stack = new Stack<>();
+        int j = 0; // pointer for popped array
+        for (int val : pushed) {
+            stack.push(val); // push into stack
+            // Pop while top of stack matches popped[j]
+            while (!stack.isEmpty() && j < popped.length && stack.peek() == popped[j]) {
+                stack.pop();
+                j++;
+            }
+        }
+        // Valid only if all popped elements matched
+        return j == popped.length;
+    }
+}
+
+11.Remove K Digits
+import java.util.Scanner;
+import java.util.Deque;
+import java.util.ArrayDeque;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        // Input number as string
+        System.out.print("Enter the number: ");
+        String num = sc.nextLine();
+        // Input k
+        System.out.print("Enter k: ");
+        int k = sc.nextInt();
+        // Output the smallest number
+        System.out.println(removeKdigits(num, k));
+        sc.close();
+    }
+    public static String removeKdigits(String num, int k) {
+        Deque<Character> stack = new ArrayDeque<>();
+        for (char digit : num.toCharArray()) {
+            while (!stack.isEmpty() && k > 0 && stack.peekLast() > digit) {
+                stack.removeLast();
+                k--;
+            }
+            stack.addLast(digit);
+        }
+        // Remove remaining digits from the end if k > 0
+        while (k > 0 && !stack.isEmpty()) {
+            stack.removeLast();
+            k--;
+        }
+        // Build the result string
+        StringBuilder sb = new StringBuilder();
+        while (!stack.isEmpty()) {
+            sb.append(stack.removeFirst());
+        }
+        // Remove leading zeros
+        while (sb.length() > 0 && sb.charAt(0) == '0') {
+            sb.deleteCharAt(0);
+        }
+        // If empty, return "0"
+        return sb.length() == 0 ? "0" : sb.toString();
+    }
+}
+
+12. Implement Queue using Stacks
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (!sc.hasNextInt()) return;
+        int n = sc.nextInt();
+        sc.nextLine(); // consume endline
+        MyQueue queue = new MyQueue();
+        for (int i = 0; i < n; i++) {
+            if (!sc.hasNextLine()) break;
+            String line = sc.nextLine().trim();
+            if (line.isEmpty()) { i--; continue; } // skip blank lines without consuming an operation
+            String[] parts = line.split("\\s+");
+            String cmd = parts[0];
+            if ("push".equals(cmd)) {
+                if (parts.length < 2) continue; // malformed line — ignore
+                long x = Long.parseLong(parts[1]);
+                queue.push(x);
+            } else if ("pop".equals(cmd)) {
+                long res = queue.pop();
+                System.out.println(res); // prints -1 if empty (defensive)
+            } else if ("peek".equals(cmd)) {
+                long res = queue.peek();
+                System.out.println(res); // prints -1 if empty (defensive)
+            } else if ("empty".equals(cmd)) {
+                System.out.println(queue.empty());
+            }
+        }
+        sc.close();
+    }
+}
+class MyQueue {
+    // Using Deque as stacks (push/pop/peek)
+    private Deque<Long> stackPush;
+    private Deque<Long> stackPop;
+    public MyQueue() {
+        stackPush = new ArrayDeque<>();
+        stackPop = new ArrayDeque<>();
+    }
+    // enqueue
+    public void push(long x) {
+        stackPush.push(x);
+    }
+    // transfer from stackPush to stackPop only when needed
+    private void transferIfNeeded() {
+        if (stackPop.isEmpty()) {
+            while (!stackPush.isEmpty()) {
+                stackPop.push(stackPush.pop());
+            }
+        }
+    }
+    // dequeue; returns -1 if queue empty (defensive)
+    public long pop() {
+        transferIfNeeded();
+        if (stackPop.isEmpty()) return -1L;
+        return stackPop.pop();
+    }
+    // peek front; returns -1 if queue empty (defensive)
+    public long peek() {
+        transferIfNeeded();
+        if (stackPop.isEmpty()) return -1L;
+        return stackPop.peek();
+    }
+    // empty check
+    public boolean empty() {
+        return stackPush.isEmpty() && stackPop.isEmpty();
+    }
+}
+
+13. Implement Stack using Queues
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (!sc.hasNextInt()) return;
+        int n = sc.nextInt();
+        sc.nextLine(); // consume newline
+        MyStack stack = new MyStack();
+        for (int i = 0; i < n; i++) {
+            if (!sc.hasNextLine()) break;
+            String line = sc.nextLine().trim();
+            if (line.isEmpty()) { i--; continue; } // skip blank lines without consuming an operation
+            String[] parts = line.split("\\s+");
+            String cmd = parts[0];
+            if ("push".equals(cmd)) {
+                if (parts.length < 2) continue; // malformed; ignore
+                long x = Long.parseLong(parts[1]);
+                stack.push(x);
+            } else if ("pop".equals(cmd)) {
+                long res = stack.pop();
+                System.out.println(res);
+            } else if ("top".equals(cmd)) {
+                long res = stack.top();
+                System.out.println(res);
+            } else if ("empty".equals(cmd)) {
+                System.out.println(stack.empty());
+            }
+        }
+        sc.close();
+    }
+}
+class MyStack {
+    private Queue<Long> queue;
+    public MyStack() {
+        queue = new LinkedList<>();
+    }
+    // push: add then rotate so the new element is at front (top)
+    public void push(long x) {
+        queue.add(x);
+        int sz = queue.size();
+        for (int i = 0; i < sz - 1; i++) {
+            queue.add(queue.remove());
+        }
+    }
+    // pop: return -1 if empty (defensive)
+    public long pop() {
+        if (queue.isEmpty()) return -1L;
+        return queue.remove(); // removes front which is the "top"
+    }
+    // top: peek front; -1 if empty (defensive)
+    public long top() {
+        if (queue.isEmpty()) return -1L;
+        return queue.peek();
+    }
+    public boolean empty() {
+        return queue.isEmpty();
+    }
+}
